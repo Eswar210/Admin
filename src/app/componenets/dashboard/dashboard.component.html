@@ -1,0 +1,58 @@
+<!-- 🌐 Admin Navbar -->
+<nav class="navbar">
+    <h1>Admin Dashboard</h1>
+    <button class="add-btn" (click)="openAddModal()">➕ Add Product</button>
+  </nav>
+  
+  <!-- 📂 Category Filters -->
+  <div class="filters">
+    <button (click)="filterByCategory('all')" [class.active]="selectedCategory === 'all'">All</button>
+    <button (click)="filterByCategory('electronics')" [class.active]="selectedCategory === 'electronics'">Electronics</button>
+    <button (click)="filterByCategory('jewelery')" [class.active]="selectedCategory === 'jewelery'">Jewelry</button>
+    <button (click)="filterByCategory(`men's clothing`)" [class.active]="selectedCategory === `men's clothing`">Men</button>
+    <button (click)="filterByCategory(`women's clothing`)" [class.active]="selectedCategory === `women's clothing`">Women</button>
+  </div>
+  <input type="text" [(ngModel)]="searchTerm" placeholder="Search products..." />
+  
+  <!-- 🛍️ Product Grid -->
+  <div class="product-grid">
+    <div *ngFor="let product of filteredProducts" class="product-card">
+      <img [src]="product.image" alt="{{ product.title }}" (click)="openModal(product)">
+      <h3>{{ product.title }}</h3>
+      <p>\${{ product.price }}</p>
+      <div class="card-actions">
+        <button (click)="editProduct(product)">✏️</button>
+        <button (click)="deleteProduct(product.id)">🗑️</button>
+        <button (click)="viewProduct(product)">View</button> <!-- View button -->
+      </div>
+    </div>
+  </div>
+  
+  <!-- 🔍 View Product Modal -->
+  <div class="modal" *ngIf="selectedProduct && !isEditMode" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h2>{{ selectedProduct.title }}</h2>
+      <img [src]="selectedProduct.image" alt="{{ selectedProduct.title }}">
+      <p><strong>Price:</strong> \${{ selectedProduct.price }}</p>
+      <p><strong>Category:</strong> {{ selectedProduct.category }}</p>
+      <p>{{ selectedProduct.description }}</p>
+      <button (click)="closeModal()">Close</button>
+    </div>
+  </div>
+  
+  <!-- ✏️ Add/Edit Product Modal -->
+  <div class="modal" *ngIf="selectedProduct && isEditMode === false || isEditMode === true" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <h2>{{ isEditMode ? 'Edit Product' : 'Add Product' }}</h2>
+      <input type="text" placeholder="Title" [(ngModel)]="productForm.title">
+      <input type="number" placeholder="Price" [(ngModel)]="productForm.price">
+      <input type="text" placeholder="Category" [(ngModel)]="productForm.category">
+      <input type="text" placeholder="Image URL" [(ngModel)]="productForm.image">
+      <textarea placeholder="Description" [(ngModel)]="productForm.description"></textarea>
+      <div class="modal-actions">
+        <button (click)="saveProduct()">Save</button>
+        <button (click)="closeModal()">Cancel</button>
+      </div>
+    </div>
+  </div>
+  
